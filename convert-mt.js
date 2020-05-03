@@ -2,7 +2,12 @@ const turndown = require("turndown");
 const fs = require("fs");
 const moment = require("moment");
 
-const FILE_PATH = "./hatena.txt";
+const FILE_PATH = process.argv[2];
+if (!FILE_PATH) {
+  console.log("[Error] enter file path like... node convert-mt.js input.txt");
+  return;
+}
+
 const OUTPUT_PATH = "./output";
 
 const htmlToMarkdown = (html) => {

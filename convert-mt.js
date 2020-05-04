@@ -3,8 +3,9 @@ const fs = require('fs');
 const moment = require('moment');
 
 const FILE_PATH = process.argv[2];
+const MODE = process.argv[3];
 if (!FILE_PATH) {
-  console.log('[Error] enter file path like... node convert-mt.js input.txt');
+  console.log('[Error] enter file path. e.g. node convert-mt.js input.txt');
   return;
 }
 
@@ -15,14 +16,12 @@ const htmlToMarkdown = (html) => {
     headingStyle: 'atx',
   });
   const markdown = turndownService.turndown(html);
-  //console.log(markdown);
   return markdown;
 };
 
 const readFile = (file) => {
   const text = fs.readFileSync(file, 'utf-8');
   const res = text.split('--------');
-  //return res.splice(0, 1);
   return res;
 };
 
@@ -41,7 +40,10 @@ const extractLines = (content, label) => {
       break;
     }
     if (isStart) {
-      result = result + line + '<br>\n';
+      result = result + line;
+      if (MODE === 'fc2') {
+        result = result + '<br>\n'; // fc2改行対策
+      }
     }
     if (line === `${label}:`) {
       isStart = true;
@@ -64,7 +66,6 @@ const parseContent = (content) => {
   const status = extractLabel(content, 'STATUS');
   const bodyHtml = extractBody(content);
   const bodyMarkdown = bodyHtml ? htmlToMarkdown(bodyHtml) : '';
-  console.log(bodyMarkdown);
   return {
     title,
     date,
@@ -78,7 +79,7 @@ const parseContent = (content) => {
 
 const getGatsbyMarkdown = (parseResult) => {
   return `---
-title: ${parseResult.title}
+title: "${parseResult.title}"
 date: "${parseResult.moment.format()}"
 tags: ["${parseResult.category}"]
 ---

@@ -24,4 +24,13 @@ node convert-mt.js your-export-file.txt fc2
 
 4. output フォルダに markdown ファイルが出力されます。記事日付ごとのフォルダに分けて格納されます。この markdown を gatsby のコンテンツフォルダにコピペすれば OK!
 
+```
+# 例
+output
+├── 20191222
+│   └── index.md
+└── 20191231
+    └── index.md
+```
+
 注意: 同日付の記事が複数あると上書きされてしまいます！
